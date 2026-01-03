@@ -2,7 +2,7 @@ import Vapor
 import Fluent
 
 struct PostgresMovieRepository: MovieRepository {
-    let db: Database
+    let db: any Database
 
     func create(_ movie: Movie) async throws {
         try await movie.save(on: db)

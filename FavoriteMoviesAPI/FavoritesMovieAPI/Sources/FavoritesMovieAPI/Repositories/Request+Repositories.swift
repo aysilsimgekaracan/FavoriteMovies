@@ -1,7 +1,7 @@
 import Vapor
 
 extension Request {
-    var movies: MovieRepository {
+    var movies: any MovieRepository {
         PostgresMovieRepository(db: self.db)
     }
 }
