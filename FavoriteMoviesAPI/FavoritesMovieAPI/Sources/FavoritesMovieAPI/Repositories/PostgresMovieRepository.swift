@@ -16,6 +16,10 @@ struct PostgresMovieRepository: MovieRepository {
         try await Movie.find(id, on: db)
     }
 
+    func update(_ movie: Movie) async throws {
+        try await movie.update(on: db)
+    }
+
     func delete(id: UUID) async throws {
         try await Movie.query(on: db)
             .filter(\.$id == id)

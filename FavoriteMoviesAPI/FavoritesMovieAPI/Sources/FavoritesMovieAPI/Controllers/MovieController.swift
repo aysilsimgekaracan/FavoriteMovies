@@ -9,6 +9,7 @@ struct MovieController: RouteCollection {
         movies.post(use: self.create)
         movies.group(":movieID") { movie in
             movie.delete(use: self.delete)
+            movie.on(.POST, "poster", body: .collect(maxSize: "10mb"), use: self.uploadPoster)
         }
     }
 
@@ -37,5 +38,29 @@ struct MovieController: RouteCollection {
 
         try await req.movies.delete(id: id)
         return .noContent
+    }
+
+    @Sendable
+    func uploadPoster(req: Request) async throws -> MovieDTO {
+        guard let id = req.parameters.get("movieID", as: UUID.self),
+              let movie = try await req.movies.find(id: id) else {
+            throw Abort(.notFound)
+        }
+
+        struct UploadInput: Content {
+            var file: File
+        }
+        let input = try req.content.decode(UploadInput.self)
+        
+        let filename = "\(id.uuidString).jpg"
+        let publicPath = req.application.directory.publicDirectory
+        let uploadPath = publicPath + "uploads/" + filename
+
+        try await req.fileio.writeFile(input.file.data, at: uploadPath)
+
+        movie.posterURL = URL(string: "http://localhost:8080/uploads/\(filename)")
+        try await req.movies.update(movie)
+
+        return movie.toDTO()
     }
 }

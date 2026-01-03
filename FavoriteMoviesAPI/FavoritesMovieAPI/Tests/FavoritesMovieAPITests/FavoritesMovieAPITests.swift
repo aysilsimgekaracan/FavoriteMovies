@@ -83,6 +83,37 @@ struct FavoritesMovieAPITests {
             })
         }
     }
+    
+    @Test("Uploading a Poster")
+    func uploadPoster() async throws {
+        let movie = Movie(title: "Test Movie", description: "Desc", rating: 5, posterURL: nil, genres: [], releaseDate: Date())
+        
+        try await withApp { app in
+            try await movie.create(on: app.db)
+            let movieID = try movie.requireID()
+            
+            let fileData = Data("fake image data".utf8)
+            let file = File(data: ByteBuffer(data: fileData), filename: "poster.jpg")
+            
+            struct UploadInput: Content {
+                var file: File
+            }
+            try await app.testing().test(.POST, "movies/\(movieID)/poster", beforeRequest: { req in
+                try req.content.encode(UploadInput(file: file))
+            }, afterResponse: { res async throws in
+                #expect(res.status == .ok)
+                
+                let updatedMovie = try await Movie.find(movieID, on: app.db)
+                #expect(updatedMovie?.posterURL?.absoluteString == "http://localhost:8080/uploads/\(movieID).jpg")
+                
+                let publicPath = app.directory.publicDirectory
+                let filePath = publicPath + "uploads/\(movieID).jpg"
+                #expect(FileManager.default.fileExists(atPath: filePath))
+                
+                try? FileManager.default.removeItem(atPath: filePath)
+            })
+        }
+    }
 }
 
 extension MovieDTO: Equatable {

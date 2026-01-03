@@ -50,6 +50,13 @@ curl -X POST http://localhost:8080/movies \
   }'
 ```
 
+#### Upload Poster
+```
+curl -X POST http://localhost:8080/movies/<ID>/poster \
+  -H "Content-Type: multipart/form-data" \
+  -F "file=@/path/to/image.jpg"
+```
+
 #### Delete Movie (Replace ID with one returned from Create or List)
 ```curl -X DELETE http://localhost:8080/movies/869B4D0A-13B3-4B3B-9B17-676EE2052246```
 
