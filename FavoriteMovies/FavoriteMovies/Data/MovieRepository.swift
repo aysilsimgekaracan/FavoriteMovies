@@ -13,8 +13,8 @@ class MovieRepository: MovieRepositoryProtocol {
           id: UUID(),
           title: "The Shawshank Redemption",
           description: "Two imprisoned men bond over a number of years",
-          rating: 9,
-          posterURL: URL(string: "https://example.com/poster1.jpg"),
+          rating: 3,
+          posterURL: URL(string: "https://picsum.dev/400/600"),
           genres: ["Drama"],
           releaseDate: Date(timeIntervalSince1970: 757382400) // 1994
       ),
@@ -22,8 +22,8 @@ class MovieRepository: MovieRepositoryProtocol {
           id: UUID(),
           title: "The Dark Knight",
           description: "Batman faces the Joker in Gotham City",
-          rating: 9,
-          posterURL: URL(string: "https://example.com/poster2.jpg"),
+          rating: 4,
+          posterURL: URL(string: "https://picsum.dev/400/600"),
           genres: ["Action", "Crime"],
           releaseDate: Date(timeIntervalSince1970: 1216339200) // 2008
       ),
@@ -31,7 +31,7 @@ class MovieRepository: MovieRepositoryProtocol {
           id: UUID(),
           title: "Inception",
           description: "A thief who enters dreams to steal secrets",
-          rating: 8,
+          rating: 5,
           posterURL: nil,
           genres: ["Sci-Fi", "Thriller"],
           releaseDate: Date(timeIntervalSince1970: 1279065600) // 2010
