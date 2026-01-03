@@ -24,4 +24,19 @@ struct MovieDTO: Content {
         
         return model
     }
+    
+    enum CodingKeys: String, CodingKey {
+        case id, title, description, rating, posterURL, genres, releaseDate
+    }
+    
+    func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encodeIfPresent(id, forKey: .id)
+        try container.encode(title, forKey: .title)
+        try container.encode(description, forKey: .description)
+        try container.encode(rating, forKey: .rating)
+        try container.encode(posterURL, forKey: .posterURL)
+        try container.encode(genres, forKey: .genres)
+        try container.encode(releaseDate, forKey: .releaseDate)
+    }
 }
