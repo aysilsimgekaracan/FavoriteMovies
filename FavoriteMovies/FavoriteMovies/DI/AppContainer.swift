@@ -5,11 +5,16 @@
 //  Created by Ayşıl Simge Karacan on 3.01.2026.
 //
 
+import Foundation
+
 final class AppContainer {
   let movieRepository: MovieRepositoryProtocol
 
-  init(movieRepository: MovieRepositoryProtocol = MovieRepository()) {
-    self.movieRepository = movieRepository
+  init() {
+    let baseURL = URL(string: "http://localhost:8080")!
+    let api = MoviesAPIClient(baseURL: baseURL)
+
+    self.movieRepository = RemoteMovieRepository(api: api)
   }
 
 

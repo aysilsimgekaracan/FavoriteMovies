@@ -82,14 +82,3 @@ struct MoviesView: View {
     }
   }
 }
-
-#Preview {
-  let container = AppContainer(movieRepository: MovieRepository())
-
-  NavigationStack {
-    MoviesView(
-      viewModel: container.makeMoviesViewModel(),
-      addMovieViewModelFactory: { container.makeAddMovieViewModel() }
-    )
-  }
-}

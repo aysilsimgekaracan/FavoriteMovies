@@ -10,7 +10,7 @@ import SwiftUI
 struct ContentView: View {
 
   private let repository = MovieRepository()
-  private let container = AppContainer()
+  let container: AppContainer
 
   var body: some View {
     NavigationStack {
@@ -20,8 +20,4 @@ struct ContentView: View {
       )
     }
   }
-}
-
-#Preview {
-  ContentView()
 }

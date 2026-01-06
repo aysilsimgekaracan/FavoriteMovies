@@ -9,6 +9,7 @@ import SwiftUI
 
 @main
 struct FavoriteMoviesApp: App {
+  private let container = AppContainer()
 
   init() {
     let appearance = UINavigationBarAppearance()
@@ -39,7 +40,7 @@ struct FavoriteMoviesApp: App {
 
   var body: some Scene {
     WindowGroup {
-      ContentView()
+      ContentView(container: container)
     }
   }
 }
