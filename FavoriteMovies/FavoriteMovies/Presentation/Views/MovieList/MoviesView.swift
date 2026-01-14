@@ -75,7 +75,7 @@ struct MoviesView: View {
     }
     .navigationTitle("Movies")
     .background(Color.background.ignoresSafeArea(.all))
-    .sheet(isPresented: $showAddMovie) {
+    .navigationDestination(isPresented: $showAddMovie) {
         AddMovieView(
             viewModel: addMovieViewModelFactory()
         )

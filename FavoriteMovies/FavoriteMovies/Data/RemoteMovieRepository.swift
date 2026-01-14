@@ -19,8 +19,21 @@ final class RemoteMovieRepository: MovieRepositoryProtocol {
     return dtos.map { $0.toDomain() }
   }
 
-  func addMovie(_ movie: Movie) async throws {
-    fatalError("Not implemented yet")
+  func addMovie(title: String,
+                description: String,
+                rating: Int,
+                genres: [String],
+                releaseDate: Date) async throws -> Movie {
+    let request = CreateMovieRequestDTO(title: title,
+                                        description: description,
+                                        rating: rating,
+                                        genres: genres,
+                                        releaseDate: releaseDate)
+    return try await api.createMovie(request).toDomain()
+  }
+
+  func uploadPoster(movieID: UUID, jpegData: Data) async throws -> Movie {
+    try await api.uploadPoster(movieID: movieID, jpegData: jpegData).toDomain()
   }
 
   func deleteMovie(_ movie: Movie) async throws {

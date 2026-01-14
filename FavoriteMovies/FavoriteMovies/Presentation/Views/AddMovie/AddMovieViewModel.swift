@@ -19,8 +19,16 @@ class AddMovieViewModel: ObservableObject {
   @Published var releaseDate: Date = Date()
   @Published var genre: String = ""
   @Published var genres: Set<String> = ["test1", "test2", "test3"]
+
   @Published var posterImage: Image?
-  @Published var posterItem: PhotosPickerItem?
+  @Published var posterItem: PhotosPickerItem? {
+    didSet {
+      Task {
+        await loadPoster()
+      }
+    }
+  }
+  @Published private(set) var posterJPEGData: Data?
 
   // MARK: State Properties
 
@@ -76,20 +84,38 @@ class AddMovieViewModel: ObservableObject {
     errorMessage = nil
 
     do {
-      let movie = Movie(id: UUID(),
-                        title: title.trimmingCharacters(in: .whitespacesAndNewlines),
-                        description: description.trimmingCharacters(in: .whitespacesAndNewlines),
-                        rating: rating,
-                        posterURL: nil,
-                        genres: Array(genres), releaseDate: releaseDate)
-
-      try await useCase.execute(movie: movie)
+      _ = try await useCase.execute(
+        title: title.trimmingCharacters(in: .whitespacesAndNewlines),
+        description: description.trimmingCharacters(in: .whitespacesAndNewlines),
+        rating: rating,
+        genres: Array(genres),
+        releaseDate: releaseDate,
+        posterJPEGData: posterJPEGData
+      )
 
       shouldDismiss = true
-
     } catch {
       errorMessage = "Failed to add movie. \(error.localizedDescription)"
-      isLoading = false
+    }
+
+    isLoading = false
+  }
+
+  func loadPoster() async {
+    guard let item = posterItem else { return }
+
+    do {
+      guard let data = try await item.loadTransferable(type: Data.self),
+         let uiImage = UIImage(data: data) else {
+        return
+      }
+
+      self.posterImage = Image(uiImage: uiImage)
+
+      posterJPEGData = uiImage.jpegData(compressionQuality: 0.85)
+
+    } catch {
+      errorMessage = "Failed to load poster. \(error.localizedDescription)"
     }
   }
 

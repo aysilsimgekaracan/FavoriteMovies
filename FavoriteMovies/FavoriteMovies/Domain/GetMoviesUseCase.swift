@@ -16,3 +16,4 @@ class GetMoviesUseCase {
     try await repository.getMovies()
   }
 }
+

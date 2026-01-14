@@ -9,7 +9,6 @@ import SwiftUI
 
 struct ContentView: View {
 
-  private let repository = MovieRepository()
   let container: AppContainer
 
   var body: some View {
