@@ -10,58 +10,19 @@ import SwiftUI
 struct MoviesView: View {
   @StateObject var viewModel: MoviesViewModel
   let addMovieViewModelFactory: () -> AddMovieViewModel
+  let movieDetailViewModelFactory: (Movie) -> MovieDetailViewModel
 
   @State private var showAddMovie = false
 
   var body: some View {
 
     List(viewModel.movies) { movie in
-      VStack {
-        ZStack {
-          AsyncImage(url: movie.posterURL) { phase in
-            switch phase {
-            case .failure:
-              Rectangle()
-                .fill(Color.black.opacity(0.3))
-                .frame(width: 256, height: 384)
-
-            case .success(let image):
-              image
-                .resizable()
-            default:
-              ProgressView()
-            }
-          }
-          .frame(width: 256, height: 384)
-          .clipShape(.rect(cornerRadius: 25))
-
-          LinearGradient(gradient: Gradient(colors: [Color.white.opacity(0), Color.black.opacity(0.9)]),
-                         startPoint: .top,
-                         endPoint: .bottom)
-            .edgesIgnoringSafeArea(.all)
-            .frame(width: 256, height: 384)
-            .clipShape(.rect(cornerRadius: 25))
-
-          VStack {
-            Spacer()
-
-            Text(movie.title)
-              .font(.callout)
-              .foregroundStyle(.white)
-
-            HStack(spacing: 0) {
-              Text(String(repeating: "★", count: movie.rating))
-              Text(String(repeating: "☆", count: 5 - movie.rating))
-            }
-            .foregroundStyle(.yellow)
-            .padding(.bottom, 12)
-          }
-        }
+      NavigationLink(value: movie) {
+        MovieRow(movie: movie)
+          .frame(maxWidth: .infinity)
       }
-      .frame(maxWidth: .infinity)
       .listRowBackground(Color.clear)
     }
-
     .scrollContentBackground(.hidden)
     .task {
       await viewModel.loadMovies()
@@ -76,9 +37,13 @@ struct MoviesView: View {
     .navigationTitle("Movies")
     .background(Color.background.ignoresSafeArea(.all))
     .navigationDestination(isPresented: $showAddMovie) {
-        AddMovieView(
-            viewModel: addMovieViewModelFactory()
-        )
+      AddMovieView(
+        viewModel: addMovieViewModelFactory()
+      )
+    }
+    .navigationDestination(for: Movie.self) { movie in
+      MovieDetailView(viewModel: movieDetailViewModelFactory(movie))
+        .background(Color.background.ignoresSafeArea(.all))
     }
   }
 }

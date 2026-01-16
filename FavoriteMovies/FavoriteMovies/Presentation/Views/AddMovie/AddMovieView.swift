@@ -12,12 +12,6 @@ struct AddMovieView: View {
   @StateObject var viewModel: AddMovieViewModel
   @Environment(\.dismiss) var dismiss
 
-  static var df: DateFormatter {
-      let df = DateFormatter()
-      df.dateStyle = .short
-      return df
-  }
-
   let columns = [
     GridItem(.adaptive(minimum: 100))
   ]

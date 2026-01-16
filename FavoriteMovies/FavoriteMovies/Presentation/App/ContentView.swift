@@ -15,7 +15,8 @@ struct ContentView: View {
     NavigationStack {
       MoviesView(
         viewModel: container.makeMoviesViewModel(),
-        addMovieViewModelFactory: container.makeAddMovieViewModel
+        addMovieViewModelFactory: container.makeAddMovieViewModel,
+        movieDetailViewModelFactory: container.makeMovieDetailViewModel
       )
     }
   }

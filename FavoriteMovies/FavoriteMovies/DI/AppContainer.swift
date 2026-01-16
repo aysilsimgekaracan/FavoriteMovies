@@ -17,12 +17,15 @@ final class AppContainer {
     self.movieRepository = RemoteMovieRepository(api: api)
   }
 
-
   func makeMoviesViewModel() -> MoviesViewModel {
     MoviesViewModel(useCase: GetMoviesUseCase(repository: movieRepository))
   }
 
   func makeAddMovieViewModel() -> AddMovieViewModel {
     AddMovieViewModel(useCase: AddMovieUseCase(repository: movieRepository))
+  }
+
+  func makeMovieDetailViewModel(movie: Movie) -> MovieDetailViewModel {
+    MovieDetailViewModel(movie: movie, deleteMovieUseCase: DeleteMovieUseCase(repository: movieRepository))
   }
 }
