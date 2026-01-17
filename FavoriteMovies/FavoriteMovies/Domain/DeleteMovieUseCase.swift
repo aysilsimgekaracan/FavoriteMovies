@@ -13,6 +13,6 @@ class DeleteMovieUseCase {
   }
 
   func execute(movie: Movie) async throws {
-    try await repository.deleteMovie(movie)
+    try await repository.deleteMovie(movie.id)
   }
 }

@@ -18,5 +18,5 @@ protocol MovieRepositoryProtocol {
 
   func uploadPoster(movieID: UUID, jpegData: Data) async throws -> Movie
 
-  func deleteMovie(_ movie: Movie) async throws
+  func deleteMovie(_ movieID: UUID) async throws
 }

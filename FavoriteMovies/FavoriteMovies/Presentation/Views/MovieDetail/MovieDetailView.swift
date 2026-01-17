@@ -11,6 +11,9 @@ struct MovieDetailView: View {
   @StateObject var viewModel: MovieDetailViewModel
   @Environment(\.dismiss) var dismiss
 
+  @State private var showDeleteConfirm = false
+  @State private var showErrorAlert = false
+
   let columns = [
     GridItem(.adaptive(minimum: 100))
   ]
@@ -87,11 +90,30 @@ struct MovieDetailView: View {
     }
     .toolbar {
       Button(role: .destructive) {
-        dismiss()
+        showDeleteConfirm = true
       } label: {
         Image(systemName: "trash")
       }
 
+    }
+    .confirmationDialog("Delete this movie?", isPresented: $showDeleteConfirm, titleVisibility: .visible) {
+      Button("Delete", role: .destructive) {
+        Task { await viewModel.deleteMovie() }
+      }
+      Button("Cancel", role: .cancel) {}
+    }
+    .onChange(of: viewModel.shouldDismiss) { _, newValue in
+      if newValue {
+        dismiss()
+      }
+    }
+    .onChange(of: viewModel.errorMessage) { _, newValue in
+      showErrorAlert = (newValue != nil)
+    }
+    .alert("Error", isPresented: $showErrorAlert) {
+      Button("OK") {}
+    } message: {
+      Text(viewModel.errorMessage ?? "Unknown error")
     }
     .navigationTitle(viewModel.movie.title)
   }

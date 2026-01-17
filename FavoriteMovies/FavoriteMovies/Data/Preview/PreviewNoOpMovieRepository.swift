@@ -43,7 +43,7 @@ final class NoOpMovieRepository: MovieRepositoryProtocol {
     )
   }
 
-  func deleteMovie(_ movie: Movie) async throws {
+  func deleteMovie(_ movieID: UUID) async throws {
     // Intentionally no-op.
   }
 }

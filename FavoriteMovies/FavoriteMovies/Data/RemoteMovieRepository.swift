@@ -36,7 +36,7 @@ final class RemoteMovieRepository: MovieRepositoryProtocol {
     try await api.uploadPoster(movieID: movieID, jpegData: jpegData).toDomain()
   }
 
-  func deleteMovie(_ movie: Movie) async throws {
-    fatalError("Not implemented yet")
+  func deleteMovie(_ movieID: UUID) async throws {
+    try await api.deleteMovie(id: movieID)
   }
 }
